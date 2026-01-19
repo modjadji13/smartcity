@@ -1,35 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from 'react';
+import { useScroll } from './hooks/useScroll';
+import './styles/main.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+import Navbar from './components/layout/Navbar';
+import Hero from './components/sections/Hero';
+import Features from './components/sections/Features';
+import Footer from './components/layout/Footer';
+import DownloadModal from './components/ui/DownloadModal';
+
+export default function App() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showDownloadModal, setShowDownloadModal] = useState(false);
+
+  const scrolled = useScroll(20);
+
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+  const openDownload = () => setShowDownloadModal(true);
+  const closeDownload = () => setShowDownloadModal(false);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="font-body bg-white text-slate-900 min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white overflow-x-hidden">
+      <Navbar scrolled={scrolled} isOpen={isMenuOpen} onToggle={toggleMenu} onDownload={openDownload} />
 
-export default App
+      <main>
+        <Hero onDownload={openDownload} />
+        <Features />
+      </main>
+
+      <Footer />
+
+      {showDownloadModal && <DownloadModal onClose={closeDownload} />}
+    </div>
+  );
+}
